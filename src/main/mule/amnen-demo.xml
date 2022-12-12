@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="70f0b6c5-bdc7-430d-a520-bdf7ed4d7162" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="amnen-demoFlow" doc:id="629b2010-eae6-483d-94dd-7e5aab4b780d" >
+		<http:listener doc:name="Listener" doc:id="cf61c640-68bb-435c-b4a2-f6f2c2adbab5" config-ref="HTTP_Listener_config" path="/ephrem"/>
+		<set-payload value="#[&quot;melona you are my world that's why i am loving you&quot;]" doc:name="Set Payload" doc:id="455ee288-6035-470f-b7af-d0fb1899ddce" />
+		<ee:transform doc:name="Transform Message" doc:id="1be1cd8a-21f9-4b55-8883-f7110929cc52" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+var a = [
+	{
+		"name":"ephrem",
+		"marks" : 10,
+		"org": "mulesoft"
+	},
+	{
+		"name":"melona",
+		"marks" : 11,
+		"org": "maths"
+	},
+	{
+		"name":"gelili",
+		"marks" : 12,
+		"org": "love"
+	},
+	{
+		"name":"amnen",
+		"marks" : 13,
+		"org": "football"
+	}
+]
+---
+(a map {
+	name : $.name,
+	marks: $.marks,
+	org:$.org,
+	status: if ($.marks > 11) "pass" else "fail"
+	
+}) ]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>
